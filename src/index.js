@@ -10,10 +10,9 @@
 
 console.log(data);
 
-//Data given: array - objects - objects - array
 // 1.0 Create the bridge using <ul class="cards"></ul>
 
-// 2.0 renderPokemonCard(pokemon)
+// 2.0 renderCard(pokemon)
 // - create an <h2>
 //    - text comes from pokemon.name
 // - create an <img>
@@ -22,19 +21,35 @@ console.log(data);
 // input: an object that represents a pokemon
 // output: <li> element that looks like the the card template
 
-const rootEl = document.querySelector(".cards");
+const listEl = document.querySelector(".cards");
 
-function renderPokemonCard(array, object){
-let title = document.createElement('h2');
-let img = document.createElement("img")
-let cardText = document.createElement("li")
+// console.log("The BRIDGE: ", listEl);
 
-title.innerText = array.name
-img.src = array.sprites["official-artwork"].front_default
-// cardText = renderStats[i]
+function renderCard(pokemon){
+
+   const cardEl = document.createElement("li"); 
+   cardEl.setAttribute("class", "card");
+
+   const nameEl = document.createElement("h2");
+   const extractedName = pokemon.name;
+   nameEl.innerText = extractedName.toUpperCase();
+
+cardEl.append(nameEl);
+
+   const imgEl = document.createElement("img");
+   imgEl.setAttribute("width", "256");
+   imgEl.setAttribute("class" , "card--img");
+   const imgSrc = pokemon.sprites.other["official-artwork"].front_default;
+   imgEl.setAttribute("src" , imgSrc);
+
+cardEl.append(imgEl);
+return cardEl;
+
 }
 
-
+// const test = renderCard(data[0]);
+//  console.log(test);
+// listEl.append(test);
 
 // 2.1 renderStatsList(stats)
 // - The list of stats
@@ -43,22 +58,28 @@ img.src = array.sprites["official-artwork"].front_default
 // input: an array of stats from a pokemon object
 // output: <ul> element with various <li> elements
 
-
-function renderStatsList(array){
-let statsList =[];
+function renderList(array){
+const ulEl = document.createElement("ul");
+ulEl.className = "card--text";
 
 for (let i = 0; i < array.length; i++) {
-const values = array[i].base_stat
+   const stat = array[i];
+   const firstI = stat.stat.name.toUpperCase();
+   const secondI = stat.base_stat;
 
-statsList += `${ values } `
+   const liEl = document.createElement("li");
+   liEl.innerText = `${firstI}: ${secondI}`;
+
+   ulEl.append(liEl);
+   
 }
-return statsList;
+return ulEl;
 }
 
-const test = renderStatsList(data[0].stats)
-console.log(test)
+// const testT = renderList(data[0].stats)
+// listEl.append(testT);
 
-
+// console.log(testT);
 
 
 // 2.2 renderPokemonCards(data)
@@ -67,3 +88,28 @@ console.log(test)
 // - append to the element from Step 1.0
 // - input: an array of objects that represent pokemon (data)
 // - output: -
+
+
+// const listEl = document.querySelector(".cards");
+
+function renderPokemonCards(array) {
+
+    for (let i = 0; i < array.length; i++) {
+const card = renderCard(data[i]);
+const list = renderList(data[i].stats)
+
+console.log(card);
+console.log(list);
+
+card.append(list);
+listEl.append(card);
+
+}
+  return listEl;
+}
+
+const pokemonCard = renderPokemonCards(data);
+
+console.log("Pokemon Card: ", pokemonCard);
+
+// listEl.append(pokemonCard);
